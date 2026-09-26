@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Ranath Subasinghe — Photographer | Digital vCard</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans for clean typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- QRCode.js Library for dynamic QR generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    :root {
+      --bg-slate-top: #3d4148;
+      --bg-slate-bottom: #8e939d;
+      --page-bg: #f4f5f7;
+      --card-bg: #ffffff;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --text-light: #9ca3af;
+      --border-subtle: #f0f2f5;
+      --icon-bg: #f1f3f6;
+      --accent-green: #22c55e;
+      --accent-blue: #1877f2;
+      --btn-bg: #ebedf0;
+      --btn-text: #1f2937;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+      --shadow-float: 0 6px 16px rgba(0, 0, 0, 0.12);
+      --radius-card: 20px;
+      --radius-btn: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #1a1d21;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* Container replicating high-end phone viewport on desktop */
+    .viewport-wrapper {
+      width: 100%;
+      max-width: 440px;
+      background-color: var(--page-bg);
+      min-height: 100vh;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (min-width: 480px) {
+      body {
+        padding: 24px 0;
+      }
+      .viewport-wrapper {
+        min-height: 880px;
+        border-radius: 36px;
+        border: 8px solid #2d3139;
+      }
+    }
+
+    .header-section {
+      background: linear-gradient(180deg, #2b2e35 0%, #686d77 70%, #8d929c 100%);
+      position: relative;
+      padding: 40px 20px 0;
+      text-align: center;
+      color: #ffffff;
+      min-height: 310px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Top right floating options button */
+    .menu-fab {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 38px;
+      height: 38px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(34, 197, 94, 0.4);
+      z-index: 10;
+      border: none;
+      transition: transform 0.2s ease;
+    }
+
+    .menu-fab:active {
+      transform: scale(0.92);
+    }
+
+    .avatar-container {
+      position: relative;
+      margin-bottom: 14px;
+      margin-top: 10px;
+    }
+
+    .avatar-img {
+      width: 116px;
+      height: 116px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #ffffff;
+      box-shadow: var(--shadow-md);
+      background-color: #333;
+    }
+
+    .profile-name {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .profile-title {
+      font-size: 15px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.85);
+      letter-spacing: 0.2px;
+    }
+
+    /* Curved organic SVG transition */
+    .wave-divider {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+    }
+
+    .wave-divider svg {
+      position: relative;
+      display: block;
+      width: calc(100% + 1.3px);
+      height: 48px;
+    }
+
+    .wave-divider .shape-fill {
+      fill: var(--page-bg);
+    }
+
+    .floating-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: -30px;
+      position: relative;
+      z-index: 5;
+      padding: 0 20px;
+    }
+
+    .action-circle-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background-color: #ffffff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-float);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .action-circle-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .action-circle-btn:active {
+      transform: scale(0.95);
+    }
+
+    .action-circle-btn svg {
+      width: 22px;
+      height: 22px;
+      stroke: #111827;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Main Card Content Body */
+    .card-body {
+      padding: 24px 20px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex-grow: 1;
+    }
+
+    /* Bio Section */
+    .bio-container {
+      text-align: center;
+      padding: 6px 12px;
+    }
+
+    .bio-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #4b5563;
+      font-weight: 400;
+    }
+
+    .contact-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.02);
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 18px;
+      text-decoration: none;
+      color: inherit;
+      border-bottom: 1px solid var(--border-subtle);
+      transition: background-color 0.15s ease;
+    }
+
+    .contact-item:last-child {
+      border-bottom: none;
+    }
+
+    .contact-item:hover {
+      background-color: #f8fafc;
+    }
+
+    .icon-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background-color: var(--icon-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+
+    .icon-circle svg {
+      width: 20px;
+      height: 20px;
+      stroke: #4b5563;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .info-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+      text-transform: capitalize;
+    }
+
+    .info-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Social Section */
+    .social-section {
+      margin-top: 4px;
+    }
+
+    .section-heading {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      padding-left: 2px;
+    }
+
+    .social-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-sm);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .social-card:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .social-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .fb-logo-wrapper {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background-color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .social-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .social-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .social-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .arrow-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: #9ca3af;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Bottom Contact Button */
+    .btn-add-contact {
+      width: 100%;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      padding: 16px;
+      border-radius: var(--radius-btn);
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 10px;
+    }
+
+    .btn-add-contact:hover {
+      background-color: #e2e5e9;
+    }
+
+    .btn-add-contact:active {
+      transform: scale(0.98);
+    }
+
+    .btn-add-contact svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Toast Popup Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #111827;
+      color: white;
+      padding: 12px 22px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+
+    .toast-container.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Share & QR Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 999;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 28px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 320px;
+      text-align: center;
+      transform: scale(0.9);
+      transition: transform 0.25s ease;
+      box-shadow: var(--shadow-md);
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .modal-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    #qrcode-box {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      padding: 12px;
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn-close-modal {
+      width: 100%;
+      background: var(--page-bg);
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewport-wrapper">
+    
+    <!-- Header Section with Gradient & Curve -->
+    <header class="header-section">
+      <!-- Options Floating Button (Green) -->
+      <button class="menu-fab" id="menu-btn" title="Share & QR Options" aria-label="Share options">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+          <circle cx="6" cy="12" r="2" />
+          <circle cx="12" cy="12" r="2" />
+          <circle cx="18" cy="12" r="2" />
+        </svg>
+      </button>
+
+      <!-- Profile Avatar Image -->
+      <div class="avatar-container">
+        <img 
+          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=300&q=80" 
+          alt="Ranath Subasinghe" 
+          class="avatar-img"
+          onerror="this.onerror=null; this.src='https://placehold.co/150x150/3d4148/fff?text=RS';"
+        />
+      </div>
+
+      <!-- Identity -->
+      <h1 class="profile-name">Ranath Subasinghe</h1>
+      <p class="profile-title">Photographer</p>
+
+      <!-- Curved Wave Shape Divider -->
+      <div class="wave-divider">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M0,0 C150,90 350,-40 500,45 C650,110 900,10 1200,40 L1200,120 L0,120 Z" class="shape-fill"></path>
+        </svg>
+      </div>
+    </header>
+
+    <!-- Quick Action Floating Buttons -->
+    <div class="floating-actions">
+      <!-- Direct Call Button -->
+      <a href="tel:0786945117" class="action-circle-btn" id="call-action" title="Call Mobile">
+        <svg viewBox="0 0 24 24">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+        </svg>
+      </a>
+
+      <!-- Direct Email Button -->
+      <a href="mailto:ranath.subasinghe@gmail.com" class="action-circle-btn" id="email-action" title="Send Email">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="card-body">
+
+      <!-- Bio Paragraph -->
+      <section class="bio-container">
+        <p class="bio-text">
+          Capturing genuine emotion, designing timeless layouts. Dedicated to elevating your wedding memories into an elegant visual story.
+        </p>
+      </section>
+
+      <!-- Contact Details Card -->
+      <section class="contact-card">
+        
+        <!-- Mobile Phone -->
+        <a href="tel:0786945117" class="contact-item">
+          <div class="icon-circle">
+            <svg viewBox="0 0 24 24">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+          </div>
+          <div class="contact-info">
+            <span class="info-label">Mobile</span>
+            <span class="info-value">0786945117</span>
+          </div>
+        </a>
+
+        <!-- Whatsapp -->
+        <a href="https://wa.me/94774903062" target="_blank" rel="noopener" class="contact-item">
+          <div class="icon-circle">
+            <svg viewBox="0 0 24 24">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+          </div>
+          <div class="contact-info">
+            <span class="info-label">Whatsapp</span>
+            <span class="info-value">0774903062</span>
+          </div>
+        </a>
+
+        <!-- Email -->
+        <a href="mailto:ranath.subasinghe@gmail.com" class="contact-item">
+          <div class="icon-circle">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </div>
+          <div class="contact-info">
+            <span class="info-label">email</span>
+            <span class="info-value">ranath.subasinghe@gmail.com</span>
+          </div>
+        </a>
+
+        <!-- Company / Organization -->
+        <div class="contact-item">
+          <div class="icon-circle">
+            <svg viewBox="0 0 24 24">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+          </div>
+          <div class="contact-info">
+            <span class="info-label">infinit Photography</span>
+            <span class="info-value">Photographer</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Social Media Section -->
+      <section class="social-section">
+        <h2 class="section-heading">Find me on</h2>
+        
+        <a href="https://facebook.com" target="_blank" rel="noopener" class="social-card">
+          <div class="social-left">
+            <div class="fb-logo-wrapper">f</div>
+            <div class="social-info">
+              <span class="social-title">Facebook</span>
+              <span class="social-subtitle">follow me</span>
+            </div>
+          </div>
+          <div class="arrow-icon">
+            <svg viewBox="0 0 24 24">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </div>
+        </a>
+      </section>
+
+      <!-- Add Contact Button -->
+      <button class="btn-add-contact" id="add-contact-btn">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        Add Contact
+      </button>
+
+    </main>
+
+  </div>
+
+  <!-- QR Share Modal -->
+  <div class="modal-overlay" id="qr-modal">
+    <div class="modal-card">
+      <h3>Scan to Save</h3>
+      <p>Scan with any mobile camera to open this digital vCard directly.</p>
+      <div id="qrcode-box"></div>
+      <button class="btn-close-modal" id="close-modal-btn">Done</button>
+    </div>
+  </div>
+
+  <!-- Toast Notification element -->
+  <div class="toast-container" id="toast">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span id="toast-text">Contact file downloaded!</span>
+  </div>
+
+  <script>
+    // 1. Target Contact Profile Object
+    const contactProfile = {
+      firstName: "Ranath",
+      lastName: "Subasinghe",
+      fullName: "Ranath Subasinghe",
+      title: "Photographer",
+      company: "infinit Photography",
+      mobile: "0786945117",
+      whatsapp: "0774903062",
+      email: "ranath.subasinghe@gmail.com",
+      bio: "Capturing genuine emotion, designing timeless layouts. Dedicated to elevating your wedding memories into an elegant visual story."
+    };
+
+    // 2. Helper Toast Message
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toast-text');
+      toastText.innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // 3. Dynamic vCard (.vcf) Generator
+    document.getElementById('add-contact-btn').addEventListener('click', () => {
+      const vcardData = 
+`BEGIN:VCARD
+VERSION:3.0
+N:${contactProfile.lastName};${contactProfile.firstName};;;
+FN:${contactProfile.fullName}
+TITLE:${contactProfile.title}
+ORG:${contactProfile.company}
+TEL;TYPE=CELL,VOICE:${contactProfile.mobile}
+TEL;TYPE=WORK,CELL:${contactProfile.whatsapp}
+EMAIL;TYPE=PREF,INTERNET:${contactProfile.email}
+NOTE:${contactProfile.bio}
+END:VCARD`;
+
+      const blob = new Blob([vcardData], { type: 'text/vcard;charset=utf-8;' });
+      const blobUrl = URL.createObjectURL(blob);
+      const downloadLink = document.createElement('a');
+      
+      downloadLink.href = blobUrl;
+      downloadLink.setAttribute('download', `${contactProfile.firstName}_${contactProfile.lastName}.vcf`);
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      URL.revokeObjectURL(blobUrl);
+
+      showToast("vCard downloaded! Open to save contact.");
+    });
+
+    // 4. QR Code & Share Options Modal
+    const menuBtn = document.getElementById('menu-btn');
+    const qrModal = document.getElementById('qr-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    let qrGenerated = false;
+
+    menuBtn.addEventListener('click', () => {
+      qrModal.classList.add('active');
+      if (!qrGenerated) {
+        new QRCode(document.getElementById("qrcode-box"), {
+          text: window.location.href || "https://scanned.page/p/6I0ISq",
+          width: 160,
+          height: 160,
+          colorDark: "#111827",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+        qrGenerated = true;
+      }
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      qrModal.classList.remove('active');
+    });
+
+    qrModal.addEventListener('click', (e) => {
+      if (e.target === qrModal) {
+        qrModal.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
